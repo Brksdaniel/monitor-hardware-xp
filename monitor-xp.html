@@ -599,6 +599,55 @@
 </div>
 
 <script>
+  // Electron IPC
+  const { ipcRenderer } = require('electron');
+
+  // Botões da titlebar
+  document.querySelectorAll('.tbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('close')) ipcRenderer.send('fechar');
+      else if (btn.textContent.trim() === '_') ipcRenderer.send('minimizar');
+      else ipcRenderer.send('maximizar');
+    });
+  });
+
+  // Botão Atualizar
+  document.querySelector('.tool-btn:nth-child(1)').addEventListener('click', () => {
+    atualizarDados();
+  });
+
+  // Botão Salvar
+  document.querySelector('.tool-btn:nth-child(2)').addEventListener('click', () => {
+    const linhas = ['Componente, Sensor, Valor', ...
+      [...document.querySelectorAll('.data-item')].map(el => {
+        const label = el.querySelector('.data-label')?.textContent || '';
+        const valor = el.querySelector('.data-value')?.textContent || '';
+        return `${label}, ${valor}`;
+      })
+    ].join('\n');
+
+    const blob = new Blob([linhas], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `monitor-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  });
+
+  // Botões de rolagem por seção
+  document.querySelectorAll('.tool-btn').forEach(btn => {
+    const texto = btn.textContent;
+    if (texto.includes('Tensões')) {
+      btn.addEventListener('click', () => document.getElementById('tensoes-container').scrollIntoView({ behavior: 'smooth' }));
+    }
+    if (texto.includes('Temp')) {
+      btn.addEventListener('click', () => document.getElementById('temps-container').scrollIntoView({ behavior: 'smooth' }));
+    }
+    if (texto.includes('Fans')) {
+      btn.addEventListener('click', () => document.getElementById('fans-container').scrollIntoView({ behavior: 'smooth' }));
+    }
+  });
+
   // Relógio
   function updateClock() {
     const now = new Date();

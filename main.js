@@ -1,58 +1,59 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 
 let lhmProcess = null;
+let mainWindow = null;
 
-// Caminho do LibreHardwareMonitor
 const lhmPath = app.isPackaged
   ? path.join(process.resourcesPath, 'lhm', 'LibreHardwareMonitor.exe')
   : path.join(__dirname, 'lhm', 'LibreHardwareMonitor.exe');
 
 function iniciarLHM() {
   return new Promise((resolve) => {
-    console.log('🔄 Iniciando LibreHardwareMonitor...');
-    
     lhmProcess = spawn('powershell', [
-  '-Command',
-  `Start-Process '${lhmPath}' -ArgumentList '--minimized' -Verb RunAs -WindowStyle Hidden`
-], {
-  shell: true
-});
-
-    // Aguarda 4 segundos pra ele subir
+      '-Command',
+      `Start-Process '${lhmPath}' -ArgumentList '--minimized' -Verb RunAs -WindowStyle Hidden`
+    ], { shell: true });
     setTimeout(resolve, 4000);
   });
 }
 
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 800,
-    webPreferences: { nodeIntegration: true },
+    frame: false,
+    transparent: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    },
     title: 'Monitor de Hardware XP'
   });
 
-  win.loadURL('http://localhost:3000');
+  setTimeout(() => {
+    mainWindow.loadURL('http://localhost:3000');
+  }, 1500);
 }
+
+// Controles da janela via IPC
+ipcMain.on('fechar', () => {
+  spawn('powershell', ['-Command', 'Stop-Process -Name "LibreHardwareMonitor" -Force -ErrorAction SilentlyContinue'], { shell: true });
+  setTimeout(() => app.quit(), 1000);
+});
+ipcMain.on('minimizar', () => mainWindow.minimize());
+ipcMain.on('maximizar', () => {
+  mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize();
+});
 
 app.whenReady().then(async () => {
   await iniciarLHM();
   require('./servidor.js');
-  
-  setTimeout(() => {
-    createWindow();
-  }, 1500);
+  setTimeout(createWindow, 1500);
 });
 
 app.on('window-all-closed', () => {
-  // Fecha o LibreHardwareMonitor pelo nome do processo
-  spawn('powershell', [
-    '-Command',
-    'Stop-Process -Name "LibreHardwareMonitor" -Force -ErrorAction SilentlyContinue'
-  ], { shell: true });
-
-  setTimeout(() => {
-    app.quit();
-  }, 1000);
+  spawn('powershell', ['-Command', 'Stop-Process -Name "LibreHardwareMonitor" -Force -ErrorAction SilentlyContinue'], { shell: true });
+  setTimeout(() => app.quit(), 1000);
 });
