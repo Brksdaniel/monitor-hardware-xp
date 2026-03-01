@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>PC Monitor XP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tahoma&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #3a6ea5 url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0' y='0' width='1' height='1' fill='%234a7fb5' opacity='0.4'/%3E%3C/svg%3E");
+    font-family: 'Tahoma', sans-serif;
+    font-size: 11px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 16px;
+  }
+
+  /* XP Window */
+  .window {
+    background: #ece9d8;
+    border-radius: 8px 8px 4px 4px;
+    box-shadow: 2px 2px 0 #fff inset, -1px -1px 0 #888 inset, 3px 3px 10px rgba(0,0,0,0.5);
+    min-width: 480px;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Title Bar */
+  .titlebar {
+    background: linear-gradient(180deg, #0997ff 0%, #0053ee 8%, #0050e5 40%, #0044cc 88%, #003ac4 93%, #0041cc 100%);
+    padding: 4px 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px 8px 0 0;
+    user-select: none;
+  }
+
+  .titlebar-icon {
+    width: 16px; height: 16px;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .titlebar-title {
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    flex: 1;
+    letter-spacing: 0.2px;
+  }
+
+  .titlebar-buttons {
+    display: flex;
+    gap: 2px;
+  }
+
+  .tbtn {
+    width: 21px; height: 21px;
+    border-radius: 3px;
+    border: 1px solid rgba(0,0,0,0.4);
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+    background: linear-gradient(180deg, #4db3ff 0%, #0080ff 50%, #0060ee 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+    transition: filter 0.1s;
+  }
+  .tbtn:hover { filter: brightness(1.15); }
+  .tbtn.close {
+    background: linear-gradient(180deg, #ff7070 0%, #ee0000 50%, #cc0000 100%);
+  }
+
+  /* Menu bar */
+  .menubar {
+    background: #ece9d8;
+    border-bottom: 1px solid #aca899;
+    padding: 2px 4px;
+    display: flex;
+    gap: 2px;
+  }
+
+  .menuitem {
+    padding: 2px 6px;
+    border-radius: 2px;
+    color: #000;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .menuitem:hover {
+    background: #316ac5;
+    color: white;
+  }
+
+  /* Toolbar */
+  .toolbar {
+    background: linear-gradient(180deg, #f5f3ee 0%, #e8e4d8 100%);
+    border-bottom: 1px solid #aca899;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 10px;
+    color: #222;
+  }
+  .tool-btn:hover {
+    border: 1px solid #316ac5;
+    background: linear-gradient(180deg, #fff 0%, #e8e4d8 100%);
+  }
+  .tool-btn span { font-size: 18px; line-height: 1; }
+
+  .separator { width: 1px; height: 30px; background: #aca899; margin: 0 4px; }
+
+  /* Content */
+  .content { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+  /* XP GroupBox */
+  .groupbox {
+    border: 1px solid #aca899;
+    border-radius: 4px;
+    padding: 8px 10px 10px;
+    position: relative;
+    background: #fff;
+  }
+
+  .groupbox-label {
+    position: absolute;
+    top: -8px;
+    left: 8px;
+    background: #fff;
+    padding: 0 4px;
+    font-weight: bold;
+    color: #003399;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .groupbox-label .icon { font-size: 13px; }
+
+  /* Data grid */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .data-item {
+    background: linear-gradient(180deg, #f5f3ee 0%, #e8e4d8 100%);
+    border: 1px solid #aca899;
+    border-radius: 3px;
+    padding: 5px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .data-label {
+    color: #666;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .data-value {
+    color: #003399;
+    font-weight: bold;
+    font-size: 13px;
+  }
+
+  .data-value.warn { color: #cc6600; }
+  .data-value.ok { color: #006600; }
+  .data-value.danger { color: #cc0000; }
+
+  /* Progress bar XP style */
+  .xp-bar {
+    height: 10px;
+    background: #e0ddd4;
+    border: 1px solid #aca899;
+    border-radius: 1px;
+    overflow: hidden;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.15);
+  }
+
+  .xp-bar-fill {
+    height: 100%;
+    background: linear-gradient(180deg, #5ae55a 0%, #00b800 45%, #007800 50%, #00b800 100%);
+    border-right: 1px solid #005000;
+    transition: width 0.5s ease;
+  }
+  .xp-bar-fill.warn {
+    background: linear-gradient(180deg, #ffcc44 0%, #ee9900 45%, #cc6600 50%, #ee9900 100%);
+    border-right-color: #aa4400;
+  }
+
+  /* Status bar */
+  .statusbar {
+    background: #ece9d8;
+    border-top: 1px solid #aca899;
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    color: #444;
+  }
+
+  .status-panel {
+    border: 1px solid #aca899;
+    padding: 1px 6px;
+    background: white;
+    flex: 1;
+  }
+
+  .led {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #00cc00;
+    box-shadow: 0 0 4px #00ff00;
+    display: inline-block;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 90%, 100% { opacity: 1; }
+    95% { opacity: 0.3; }
+  }
+
+  /* Taskbar */
+  .taskbar {
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(180deg, #1f5fa6 0%, #3a88d8 5%, #2060b0 95%, #1a4f9a 100%);
+    border-radius: 4px;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 -1px 0 #4a9ae8 inset;
+  }
+
+  .start-btn {
+    background: linear-gradient(180deg, #5db85d 0%, #3c993c 50%, #2d882d 100%);
+    border: 1px solid #1a5c1a;
+    border-radius: 10px;
+    padding: 2px 10px 2px 6px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .taskbar-item {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 3px;
+    padding: 2px 8px;
+    color: white;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .taskbar-clock {
+    margin-left: auto;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 2px;
+  }
+
+  .fans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .fan-item {
+    background: linear-gradient(180deg, #f5f3ee 0%, #e8e4d8 100%);
+    border: 1px solid #aca899;
+    border-radius: 3px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: inset 1px 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .fan-icon {
+    font-size: 20px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+  }
+  .fan-icon.slow { animation-duration: 4s; }
+  .fan-icon.stopped { animation: none; opacity: 0.3; }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .fan-info { display: flex; flex-direction: column; gap: 1px; }
+  .fan-name { font-size: 10px; color: #666; }
+  .fan-rpm { font-size: 13px; font-weight: bold; color: #003399; }
+
+  /* Gráfico */
+  .grafico-container {
+    background: #000;
+    border: 2px inset #aca899;
+    border-radius: 2px;
+    padding: 6px;
+    position: relative;
+  }
+
+  canvas {
+    width: 100%;
+    display: block;
+  }
+
+  .grafico-legenda {
+    display: flex;
+    gap: 12px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #333;
+  }
+
+  .legenda-cor {
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- MAIN WINDOW -->
+<div class="window">
+
+  <!-- Title Bar -->
+  <div class="titlebar">
+    <span class="titlebar-icon">💻</span>
+    <span class="titlebar-title">Monitor de Hardware - PC Gamer</span>
+    <div class="titlebar-buttons">
+      <div class="tbtn">_</div>
+      <div class="tbtn">□</div>
+      <div class="tbtn close">✕</div>
+    </div>
+  </div>
+
+  <!-- Menu Bar -->
+  <div class="menubar">
+    <div class="menuitem">Arquivo</div>
+    <div class="menuitem">Exibir</div>
+    <div class="menuitem">Configurações</div>
+    <div class="menuitem">Ajuda</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tool-btn"><span>🔄</span>Atualizar</div>
+    <div class="tool-btn"><span>💾</span>Salvar</div>
+    <div class="separator"></div>
+    <div class="tool-btn"><span>⚡</span>Tensões</div>
+    <div class="tool-btn"><span>🌡️</span>Temp.</div>
+    <div class="tool-btn"><span>💨</span>Fans</div>
+    <div class="separator"></div>
+    <div class="tool-btn"><span>⚙️</span>Config</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+  <div class="groupbox">
+    <div class="groupbox-label">⚡ Tensões</div>
+    <div class="data-grid" id="tensoes-container">Carregando...</div>
+  </div>
+  <div class="groupbox">
+    <div class="groupbox-label">🌡️ Temperaturas</div>
+    <div id="temps-container">Carregando...</div>
+  </div>
+  <div class="groupbox">
+    <div class="groupbox-label">💨 Fans</div>
+    <div class="fans-grid" id="fans-container">Carregando...</div>
+  </div>
+</div>
+
+    <!-- Tensões Placa-mãe -->
+    <div class="groupbox">
+      <div class="groupbox-label"><span class="icon">🖥️</span> Placa-mãe — ITE IT8655E (ASUS PRIME B450M)</div>
+      <div class="data-grid">
+        <div class="data-item">
+          <div class="data-label">Vcore</div>
+          <div class="data-value ok" id="vcore">1,101 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:55%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Voltage #2</div>
+          <div class="data-value ok">2,518 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:62%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Voltage #3</div>
+          <div class="data-value ok">2,038 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:50%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Voltage #4</div>
+          <div class="data-value ok">1,995 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:49%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Voltage #5</div>
+          <div class="data-value ok">2,006 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:50%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">CMOS Battery</div>
+          <div class="data-value warn">1,646 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill warn" style="width:40%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tensões CPU -->
+    <div class="groupbox">
+      <div class="groupbox-label"><span class="icon">⚙️</span> CPU — AMD Ryzen 7 2700</div>
+      <div class="data-grid">
+        <div class="data-item">
+          <div class="data-label">Core SVI2 TFN</div>
+          <div class="data-value ok">1,094 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Core #1 VID</div>
+          <div class="data-value ok">1,088 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Core #2 VID</div>
+          <div class="data-value ok">1,088 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Core #3 VID</div>
+          <div class="data-value ok">1,088 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Core #4 VID</div>
+          <div class="data-value ok">1,094 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Core #5~8 VID</div>
+          <div class="data-value ok">1,094 V</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:54%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPU + Temperaturas + Fans numa linha -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+
+      <!-- GPU -->
+      <div class="groupbox">
+        <div class="groupbox-label"><span class="icon">🎮</span> GPU — RTX 2060</div>
+        <div style="margin-top:4px; display:flex; flex-direction:column; gap:6px;">
+          <div class="data-item">
+            <div class="data-label">GPU Core Voltage</div>
+            <div class="data-value ok">0,713 V</div>
+            <div class="xp-bar"><div class="xp-bar-fill" style="width:35%"></div></div>
+          </div>
+          <div class="data-item">
+            <div class="data-label">GPU Temp</div>
+            <div class="data-value warn">62 °C</div>
+            <div class="xp-bar"><div class="xp-bar-fill warn" style="width:62%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temperaturas Placa -->
+      <div class="groupbox">
+        <div class="groupbox-label"><span class="icon">🌡️</span> Temperaturas</div>
+        <div style="margin-top:4px; display:flex; flex-direction:column; gap:4px;">
+          <div class="data-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
+            <div class="data-label">Temp #1</div>
+            <div class="data-value ok">33 °C</div>
+          </div>
+          <div class="data-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
+            <div class="data-label">Temp #2</div>
+            <div class="data-value warn">36 °C</div>
+          </div>
+          <div class="data-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
+            <div class="data-label">Temp #3~6</div>
+            <div class="data-value ok">32 °C</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fans -->
+    <div class="groupbox">
+      <div class="groupbox-label"><span class="icon">💨</span> Ventoinhas (Fans)</div>
+      <div class="fans-grid">
+        <div class="fan-item">
+          <span class="fan-icon">🌀</span>
+          <div class="fan-info">
+            <div class="fan-name">Fan #1</div>
+            <div class="fan-rpm">927 RPM</div>
+          </div>
+        </div>
+        <div class="fan-item">
+          <span class="fan-icon stopped">🌀</span>
+          <div class="fan-info">
+            <div class="fan-name">Fan #2</div>
+            <div class="fan-rpm" style="color:#999">0 RPM</div>
+          </div>
+        </div>
+        <div class="fan-item">
+          <span class="fan-icon slow">🌀</span>
+          <div class="fan-info">
+            <div class="fan-name">Fan #3</div>
+            <div class="fan-rpm">1634 RPM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Gráfico Histórico -->
+<div class="groupbox">
+  <div class="groupbox-label"><span class="icon">📊</span> Histórico de Temperaturas (últimos 60s)</div>
+  <div class="grafico-container">
+    <canvas id="grafico" height="120"></canvas>
+  </div>
+  <div class="grafico-legenda" id="legenda-grafico"></div>
+</div>
+
+  <!-- Status Bar -->
+  <div class="statusbar">
+    <span class="led"></span>
+    <div class="status-panel" id="status-bar">Conectando...</div>
+    <div class="status-panel" style="flex:0; white-space:nowrap;">3 sensores ativos</div>
+  </div>
+
+</div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+  <div class="start-btn">🪟 Iniciar</div>
+  <div class="taskbar-item">💻 Monitor de Hardware</div>
+  <div class="taskbar-clock" id="clock">12:00</div>
+</div>
+
+<script>
+  // Relógio
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // Histórico de temperaturas
+  const MAX_PONTOS = 30;
+  const historico = {}; // { nome: [valores] }
+  const CORES = ['#00ff00','#00ccff','#ffcc00','#ff6600','#ff00ff','#ffffff','#00ffcc','#ff4444'];
+
+  function desenharGrafico() {
+    const canvas = document.getElementById('grafico');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    const W = canvas.width, H = 120;
+
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, W, H);
+
+    // Grade
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 4; i++) {
+      const y = (H / 4) * i;
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      ctx.fillStyle = '#333';
+      ctx.font = '9px Tahoma';
+      const temp = 100 - i * 25;
+      ctx.fillText(temp + '°', 2, y + 10);
+    }
+
+    // Linhas verticais
+    for (let i = 0; i <= MAX_PONTOS; i += 5) {
+      const x = (W / MAX_PONTOS) * i;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+    }
+
+    // Dados
+    const nomes = Object.keys(historico);
+    nomes.forEach((nome, idx) => {
+      const vals = historico[nome];
+      if (vals.length < 2) return;
+      const cor = CORES[idx % CORES.length];
+      ctx.strokeStyle = cor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      vals.forEach((v, i) => {
+        const x = (W / MAX_PONTOS) * (MAX_PONTOS - vals.length + i);
+        const y = H - (v / 100) * H;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Valor atual com fundo pra não sobrepor
+      const ultimo = vals[vals.length - 1];
+      const xFim = W - 38;
+      const yFim = H - (ultimo / 100) * H;
+      const labelY = Math.max(12, Math.min(yFim, H - 4));
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(xFim - 2, labelY - 11, 36, 13);
+      ctx.fillStyle = cor;
+      ctx.font = 'bold 10px Tahoma';
+      ctx.fillText(ultimo + '°C', xFim, labelY);
+    });
+
+    // Zona de perigo
+    ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    const yPerigo = H - (80 / 100) * H;
+    ctx.beginPath(); ctx.moveTo(0, yPerigo); ctx.lineTo(W, yPerigo); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(255,0,0,0.5)';
+    ctx.font = '9px Tahoma';
+    ctx.fillText('⚠ 80°C', 2, yPerigo - 2);
+
+    // Legenda
+    const legenda = document.getElementById('legenda-grafico');
+    legenda.innerHTML = nomes.map((nome, idx) => `
+      <div class="legenda-item">
+        <div class="legenda-cor" style="background:${CORES[idx % CORES.length]}"></div>
+        ${nome}
+      </div>
+    `).join('');
+  }
+
+  // Busca dados reais
+  async function atualizarDados() {
+    try {
+      const res = await fetch('http://localhost:3000/dados');
+      const dados = await res.json();
+
+      const tensoes = dados.filter(d => d.grupo === 'Voltages');
+      const temps = dados.filter(d => d.grupo === 'Temperatures');
+      const fans = dados.filter(d => d.grupo === 'Fans');
+
+      // Tensões
+      const tensaoHTML = tensoes.map(d => `
+        <div class="data-item">
+          <div class="data-label">[${d.componente}] ${d.nome}</div>
+          <div class="data-value ok">${d.valor}</div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:${Math.min(parseFloat(d.valor) / 3 * 100, 100)}%"></div></div>
+        </div>
+      `).join('');
+
+      // Temperaturas
+      const tempHTML = temps.map(d => {
+        const val = parseFloat(d.valor);
+        const cls = val > 80 ? 'danger' : val > 60 ? 'warn' : 'ok';
+        return `
+        <div class="data-item" style="flex-direction:row; justify-content:space-between; align-items:center;">
+          <div class="data-label">${d.nome}</div>
+          <div class="data-value ${cls}">${d.valor}</div>
+        </div>`;
+      }).join('');
+
+      // Fans
+      const fanHTML = fans.map(d => {
+        const rpm = parseFloat(d.valor);
+        const spinClass = rpm === 0 ? 'stopped' : rpm < 1000 ? 'slow' : '';
+        return `
+        <div class="fan-item">
+          <span class="fan-icon ${spinClass}">🌀</span>
+          <div class="fan-info">
+            <div class="fan-name">${d.nome}</div>
+            <div class="fan-rpm" style="${rpm === 0 ? 'color:#999' : ''}">${d.valor}</div>
+          </div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('tensoes-container').innerHTML = tensaoHTML;
+      document.getElementById('temps-container').innerHTML = tempHTML;
+      document.getElementById('fans-container').innerHTML = fanHTML;
+
+      // Atualiza histórico do gráfico
+      const tempsImportantes = ['GPU Hot Spot', 'GPU Core', 'Core (Tctl/Tdie)'];
+temps.filter(d => tempsImportantes.includes(d.nome)).forEach(d => {
+        const val = parseFloat(d.valor);
+        if (!historico[d.nome]) historico[d.nome] = [];
+        historico[d.nome].push(val);
+        if (historico[d.nome].length > MAX_PONTOS) historico[d.nome].shift();
+      });
+
+      desenharGrafico();
+
+      document.getElementById('status-bar').textContent =
+        `✅ Atualizado às ${new Date().toLocaleTimeString('pt-BR')}`;
+
+    } catch (e) {
+      document.getElementById('status-bar').textContent = '❌ Erro: LibreHardwareMonitor não encontrado!';
+    }
+  }
+
+  atualizarDados();
+  setInterval(atualizarDados, 2000);
+</script>
