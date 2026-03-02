@@ -26,7 +26,7 @@ Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atu
 4. Aceita a permissão de administrador que aparecer
 5. Pronto! 🎉
 6. Agora com o app Android junto
-7. Caso queiram baixar o apk >>> https://expo.dev/accounts/brkadaniel/projects/monitor-hardware-app/builds/b3db7e6a-3382-46cb-a37b-d4052cc8c2a7
+7. Caso queiram baixar o apk >>> https://expo.dev/accounts/brkadaniel/projects/monitor-hardware-app/builds/c8d5e3e5-c468-4a55-a863-f9c34f7f3626
 
 
 
@@ -49,4 +49,5 @@ Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atu
 ---
 
 Feito por [Brksdaniel](https://github.com/Brksdaniel) 🚀
+
 
