@@ -2,6 +2,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
+const os = require('os');
+const nomePC = os.hostname(); // pega o nome do PC automaticamente!
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 global.fetch = fetch;
 const supabase = createClient(
@@ -45,7 +47,7 @@ function filtrarTudo(node, componente, resultado) {
   if (['Voltages','Temperatures','Fans'].includes(node.Text) && node.Children) {
     node.Children.forEach(filho => {
       if (filho.Value && filho.Value !== '') {
-        resultado.push({ grupo: node.Text, componente, nome: filho.Text, valor: filho.Value });
+        resultado.push({ grupo: node.Text, componente, nome: filho.Text, valor: filho.Value, pc: nomePC });
       }
     });
     return;
