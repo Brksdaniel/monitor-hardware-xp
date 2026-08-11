@@ -1,4 +1,4 @@
-# 💻 Monitor de Hardware XP
+Monitor de Hardware XP
 
 Monitor de hardware em tempo real com visual estilo Windows XP!
 Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atualizado a cada 3 segundos.
@@ -8,8 +8,7 @@ Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atu
 ![Windows](https://img.shields.io/badge/plataforma-Windows-0078D6)
 
 ---
-
-## ⚡ O que mostra?
+O que mostra?
 
 - Tensões da placa-mãe, CPU e GPU
 - Temperaturas de todos os sensores (com alerta de cor quando esquentar!)
@@ -17,14 +16,12 @@ Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atu
 - Gráfico histórico de temperaturas em tempo real
 
 ---
-
-## 🚀 Como instalar
+Como instalar
 
 1. Vai em [Releases](https://github.com/Brksdaniel/monitor-hardware-xp/releases)
 2. Baixa o `Monitor de Hardware XP Setup 1.0.0.exe`
 3. Instala e abre
-4. Aceita a permissão de administrador que aparecer
-5. Pronto! 🎉
+4. Aceita a permissão de administrador que aparecer
 6. Agora com o app Android junto
 7. Caso queiram baixar o apk >>> https://expo.dev/accounts/brkadaniel/projects/monitor-hardware-app/builds/c8d5e3e5-c468-4a55-a863-f9c34f7f3626
 
@@ -34,20 +31,16 @@ Mostra tensões, temperaturas e velocidade das ventoinhas do seu PC — tudo atu
 
 ---
 
-## 🖥️ Preview
+Preview
 
 > Visual estilo Windows XP com janela, barra de título, menus e taskbar!
 
 ---
 
-## 🛠️ Tecnologias usadas
+Tecnologias usadas
 
 - [Node.js](https://nodejs.org)
 - [Electron](https://www.electronjs.org)
-- [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor)
-
----
-
-Feito por [Brksdaniel](https://github.com/Brksdaniel) 🚀
+- [LibreHardwareMonitor](https://github.com/LibreHardwareMonitor/LibreHardwareMonitor)
 
 
